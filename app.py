@@ -1,7 +1,8 @@
 import os
 import sqlite3
+import numpy as np
 from flask import Flask, request, jsonify, render_template
-from audio_pipeline import AudioPipeline
+from audio_pipeline import AudioPipeline, AudioSegment
 from summariser import Summariser
 
 app = Flask(__name__, template_folder='templates')
@@ -28,9 +29,10 @@ def upload():
     filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
     file.save(filepath)
     
-    # Get dynamic configuration from frontend sliders
+    # Get dynamic configuration from frontend inputs
     top_db = int(request.form.get('top_db', 25))
     noise_reduction = float(request.form.get('noise_reduction', 0.5))
+    preset = request.form.get('preset', 'executive')
     
     try:
         # Run local noise-cleaned VAD + diarization + inference
@@ -38,7 +40,7 @@ def upload():
         for seg in segments:
             pipeline.run_inference(seg)
             
-        summary_md = Summariser.generate_summary(segments)
+        summary_md = Summariser.generate_summary(segments, preset=preset)
         
         # Save run to database history
         history_id = pipeline.save_to_history(file.filename, filepath, segments, summary_md)
@@ -57,12 +59,13 @@ def rename():
     history_id = data.get('history_id')
     old_name = data.get('old_name')
     new_name = data.get('new_name')
+    preset = data.get('preset', 'executive')
     
     if not history_id or not old_name or not new_name:
         return jsonify({"error": "Missing parameters"}), 400
         
     try:
-        pipeline.rename_speaker(int(history_id), old_name, new_name)
+        pipeline.rename_speaker(int(history_id), old_name, new_name, preset=preset)
         
         # Fetch the updated summary markdown
         conn = sqlite3.connect(pipeline.db_path)
@@ -74,6 +77,68 @@ def rename():
         return jsonify({
             "status": "success",
             "summary_markdown": row[0] if row else ""
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/update_segment', methods=['POST'])
+def update_segment():
+    """
+    Updates the text of a single transcript segment (inline editor) and re-generates
+    the summary report to keep the text aligned with corrections.
+    """
+    data = request.get_json()
+    history_id = data.get('history_id')
+    start_time = data.get('start_time')
+    new_text = data.get('new_text')
+    preset = data.get('preset', 'executive')
+    
+    if history_id is None or start_time is None or new_text is None:
+        return jsonify({"error": "Missing parameters"}), 400
+        
+    try:
+        conn = sqlite3.connect(pipeline.db_path)
+        cursor = conn.cursor()
+        
+        # Update specific segment
+        cursor.execute("""
+            UPDATE segments
+            SET transcript = ?
+            WHERE history_id = ? AND start_time = ?
+        """, (new_text, history_id, start_time))
+        
+        # Reload all segments to recompile report markdown
+        cursor.execute("""
+            SELECT start_time, end_time, speaker, transcript, classification
+            FROM segments
+            WHERE history_id = ?
+            ORDER BY start_time ASC
+        """, (history_id,))
+        rows = cursor.fetchall()
+        
+        segments = []
+        for r in rows:
+            seg = AudioSegment(r[0], r[1], r[2], np.array([]), 16000)
+            seg.transcript = r[3]
+            seg.classification = r[4]
+            segments.append(seg)
+            
+        new_summary_md = Summariser.generate_summary(segments, preset=preset)
+        full_transcript = "\n".join([f"[{s.start_time:.2f}s - {s.end_time:.2f}s] {s.speaker}: {s.transcript}" for s in segments])
+        
+        # Update history
+        cursor.execute("""
+            UPDATE history
+            SET transcript = ?, summary_markdown = ?
+            WHERE id = ?
+        """, (full_transcript, new_summary_md, history_id))
+        
+        conn.commit()
+        conn.close()
+        
+        return jsonify({
+            "status": "success",
+            "summary_markdown": new_summary_md
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500

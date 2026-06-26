@@ -51,13 +51,12 @@ def test_summariser():
     seg2.classification = "idea"
     
     summary_md = Summariser.generate_summary([seg1, seg2])
-    
-    assert "# SonicSplice Processing Summary" in summary_md
-    assert "3 Actionable Notes" in summary_md
+    assert "# SonicSplice Intelligence Summary" in summary_md
+    assert "Dialogue Metrics Overview" in summary_md
     assert "Speaker A" in summary_md
     assert "Speaker B" in summary_md
     assert "Task" in summary_md
-    assert "Idea" in summary_md
+
 
 def test_save_and_retrieve_history(temp_db):
     pipeline = AudioPipeline(db_path=temp_db)

@@ -209,7 +209,7 @@ class AudioPipeline:
         segment.classification = classification
         return transcript, classification
 
-    def rename_speaker(self, history_id: int, old_name: str, new_name: str):
+    def rename_speaker(self, history_id: int, old_name: str, new_name: str, preset: str = "executive"):
         """
         Renames a speaker in SQLite and regenerates the summary markdown report
         to ensure data persistence and UI consistency.
@@ -241,7 +241,7 @@ class AudioPipeline:
             segments.append(seg)
             
         from summariser import Summariser
-        new_summary_md = Summariser.generate_summary(segments)
+        new_summary_md = Summariser.generate_summary(segments, preset=preset)
         full_transcript = "\n".join([f"[{seg.start_time:.2f}s - {seg.end_time:.2f}s] {seg.speaker}: {seg.transcript}" for seg in segments])
         
         # 3. Update main history record
@@ -253,6 +253,7 @@ class AudioPipeline:
         
         conn.commit()
         conn.close()
+
 
     def save_to_history(self, filename: str, filepath: str, segments: list[AudioSegment], summary_md: str) -> int:
         """Saves a completed run into the SQLite local database."""

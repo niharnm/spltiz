@@ -2,50 +2,102 @@ from audio_pipeline import AudioSegment
 
 class Summariser:
     @staticmethod
-    def generate_summary(segments: list[AudioSegment]) -> str:
+    def calculate_analytics(segments: list[AudioSegment]) -> dict:
         """
-        Processes segments, extracts tasks and ideas, and builds
-        a beautifully formatted Markdown report with action items and timestamps.
+        Computes dialogue percentage distribution, word counts, and WPM rates
+        to supply Otter-style conversational metrics.
         """
-        # Extract tasks and ideas
-        tasks = [seg for seg in segments if seg.classification == "task"]
-        ideas = [seg for seg in segments if seg.classification == "idea"]
-        
-        # Build 3 actionable bullet-point notes
-        notes = []
-        
-        # Add tasks to notes
-        for t in tasks:
-            notes.append(f"**Task ({t.speaker} @ {t.start_time:.1f}s):** {t.transcript}")
-        
-        # Add ideas to notes
-        for i in ideas:
-            notes.append(f"**Idea ({i.speaker} @ {i.start_time:.1f}s):** {i.transcript}")
+        total_duration = sum(seg.end_time - seg.start_time for seg in segments)
+        if total_duration <= 0:
+            total_duration = 1.0
             
-        # Standard fallback action items if we don't have enough segments classified
-        fallback_items = [
-            "Verify PySide6 drag-and-drop interfaces handle both WAV and MP3 files.",
-            "Optimize energy thresholding for VAD to filter out low-frequency background hums.",
-            "Confirm that the SQLite database is successfully persistent across app launches."
-        ]
-        
-        while len(notes) < 3:
-            notes.append(f"**Action Item:** {fallback_items[len(notes)]}")
-            
-        # Build Markdown
-        md = []
-        md.append("# SonicSplice Processing Summary")
-        md.append("")
-        md.append("### 3 Actionable Notes")
-        for note in notes[:3]:
-            md.append(f"- {note}")
-        md.append("")
-        md.append("### Segmented & Diarised Transcript")
-        md.append("| Timecode | Speaker | Classification | Transcript |")
-        md.append("| :--- | :--- | :--- | :--- |")
+        speaker_times = {}
+        speaker_words = {}
         
         for seg in segments:
-            c_type = seg.classification.capitalize()
-            md.append(f"| {seg.start_time:.1f}s - {seg.end_time:.1f}s | {seg.speaker} | {c_type} | {seg.transcript} |")
+            duration = seg.end_time - seg.start_time
+            speaker_times[seg.speaker] = speaker_times.get(seg.speaker, 0.0) + duration
             
+            words = len(seg.transcript.split())
+            speaker_words[seg.speaker] = speaker_words.get(seg.speaker, 0) + words
+            
+        analytics = []
+        for speaker, time_spent in speaker_times.items():
+            pct = (time_spent / total_duration) * 100
+            words = speaker_words.get(speaker, 0)
+            minutes = time_spent / 60.0
+            wpm = words / minutes if minutes > 0 else 0.0
+            
+            analytics.append({
+                "speaker": speaker,
+                "percentage": round(pct, 1),
+                "duration": round(time_spent, 1),
+                "words": words,
+                "wpm": round(wpm, 1)
+            })
+            
+        return {
+            "total_duration": round(total_duration, 1),
+            "speakers": analytics
+        }
+
+    @staticmethod
+    def generate_summary(segments: list[AudioSegment], preset: str = "executive") -> str:
+        """
+        Compiles structured insights based on preset rules:
+        - Executive: Task tables, timelines, high-impact decisions.
+        - Brainstorm: Ideas boards, concept definitions, creative workflows.
+        - Verbatim: Fully aligned conversation transcripts.
+        """
+        tasks = [seg for seg in segments if seg.classification == "task"]
+        ideas = [seg for seg in segments if seg.classification == "idea"]
+        analytics = Summariser.calculate_analytics(segments)
+        
+        md = []
+        md.append("# SonicSplice Intelligence Summary")
+        md.append(f"*Preset: {preset.capitalize()} Mode | Computed entirely locally via Gemma-2B-audio*")
+        md.append("")
+        
+        # 1. Conversation Metrics
+        md.append("## 📊 Dialogue Metrics Overview")
+        md.append(f"**Total File Length:** {analytics['total_duration']}s")
+        for s in analytics["speakers"]:
+            md.append(f"- **{s['speaker']}:** {s['percentage']}% total speak time ({s['duration']}s) | {s['words']} words written | {s['wpm']} words/min")
+        md.append("")
+        
+        # 2. Preset Specific Analysis
+        if preset == "executive":
+            md.append("## 🎯 Actionable Task Board")
+            if tasks:
+                for t in tasks:
+                    md.append(f"- [ ] **Task ({t.speaker} @ {t.start_time:.1f}s):** {t.transcript}")
+            else:
+                md.append("- No tasks were automatically detected in this file.")
+                
+            md.append("")
+            md.append("## 🔑 Key Decisions & Outlines")
+            if ideas:
+                for idx, i in enumerate(ideas[:3]):
+                    md.append(f"{idx+1}. **Decision:** {i.transcript} ({i.speaker} at {i.start_time:.1f}s)")
+            else:
+                md.append("- No primary brainstorming decisions logged.")
+                
+        elif preset == "brainstorm":
+            md.append("## 💡 Ideation & Concept Cloud")
+            if ideas:
+                for i in ideas:
+                    md.append(f"- **Idea ({i.speaker} @ {i.start_time:.1f}s):** {i.transcript}")
+            else:
+                md.append("- No ideation logs found.")
+            md.append("")
+            md.append("## ⚡ Suggested Actions")
+            if tasks:
+                for t in tasks:
+                    md.append(f"- **Consider:** implementing *\"{t.transcript}\"* proposed by {t.speaker}")
+                    
+        else: # verbatim
+            md.append("## 📝 Verbatim Transcript Logs")
+            for seg in segments:
+                md.append(f"**[{seg.start_time:.1f}s - {seg.end_time:.1f}s] {seg.speaker}:** {seg.transcript}")
+                
         return "\n".join(md)
