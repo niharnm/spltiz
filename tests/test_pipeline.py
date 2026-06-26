@@ -77,3 +77,33 @@ def test_save_and_retrieve_history(temp_db):
     assert len(history) == 1
     assert history[0]["filename"] == "test_audio.wav"
     assert history[0]["summary_markdown"] == summary_md
+
+def test_rename_speaker(temp_db):
+    pipeline = AudioPipeline(db_path=temp_db)
+    sr = 16000
+    dummy_audio = np.zeros(sr)
+    
+    seg = AudioSegment(0.0, 2.0, "Speaker A", dummy_audio, sr)
+    seg.transcript = "Let's review this segment."
+    seg.classification = "idea"
+    
+    summary_md = Summariser.generate_summary([seg])
+    history_id = pipeline.save_to_history("test.wav", "/path/to/test.wav", [seg], summary_md)
+    
+    # Rename "Speaker A" to "Nihar"
+    pipeline.rename_speaker(history_id, "Speaker A", "Nihar")
+    
+    # Check if updated in database
+    conn = sqlite3.connect(temp_db)
+    cursor = conn.cursor()
+    cursor.execute("SELECT speaker FROM segments WHERE history_id = ?", (history_id,))
+    speaker_val = cursor.fetchone()[0]
+    
+    cursor.execute("SELECT summary_markdown FROM history WHERE id = ?", (history_id,))
+    updated_md = cursor.fetchone()[0]
+    conn.close()
+    
+    assert speaker_val == "Nihar"
+    assert "Nihar" in updated_md
+    assert "Speaker A" not in updated_md
+
