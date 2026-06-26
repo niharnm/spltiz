@@ -10,8 +10,8 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         :root {
-            --bg-color: #08080c;
-            --panel-bg: rgba(17, 17, 24, 0.75);
+            --bg-color: #060609;
+            --panel-bg: rgba(16, 16, 22, 0.75);
             --panel-border: rgba(255, 255, 255, 0.08);
             --accent-primary: #7c4dff;
             --accent-primary-glow: rgba(124, 77, 255, 0.35);
@@ -23,7 +23,7 @@
             --speaker-b-bg: rgba(0, 180, 216, 0.15);
             --text-primary: #f3f3f6;
             --text-secondary: #9494a6;
-            --glass-blur: blur(24px);
+            --glass-blur: blur(25px);
         }
 
         * {
@@ -40,8 +40,8 @@
             display: flex;
             overflow-x: hidden;
             background-image: 
-                radial-gradient(circle at 5% 10%, rgba(124, 77, 255, 0.12) 0%, transparent 40%),
-                radial-gradient(circle at 95% 85%, rgba(0, 255, 204, 0.08) 0%, transparent 45%);
+                radial-gradient(circle at 3% 10%, rgba(124, 77, 255, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 97% 85%, rgba(0, 255, 204, 0.1) 0%, transparent 45%);
         }
 
         /* Sidebar Navigation */
@@ -50,10 +50,10 @@
             background: var(--panel-bg);
             backdrop-filter: var(--glass-blur);
             border-right: 1px solid var(--panel-border);
-            padding: 35px 25px;
+            padding: 35px 20px;
             display: flex;
             flex-direction: column;
-            gap: 25px;
+            gap: 20px;
             height: 100vh;
             position: sticky;
             top: 0;
@@ -64,11 +64,12 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            padding-left: 5px;
         }
 
         .logo-icon {
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
             background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
             border-radius: 12px;
             display: flex;
@@ -76,19 +77,36 @@
             justify-content: center;
             font-weight: 800;
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 22px;
+            font-size: 20px;
             color: #000;
             box-shadow: 0 0 25px var(--accent-primary-glow);
         }
 
         .logo-text {
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
             letter-spacing: -0.5px;
             background: linear-gradient(to right, #ffffff, #a5a5b5);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+        }
+
+        .search-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-size: 13px;
+            color: var(--text-primary);
+            outline: none;
+            width: 100%;
+            transition: border-color 0.2s ease;
+        }
+
+        .search-box:focus {
+            border-color: var(--accent-primary);
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .sidebar-divider {
@@ -103,6 +121,7 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             color: var(--text-secondary);
+            padding-left: 5px;
         }
 
         .history-list {
@@ -110,37 +129,34 @@
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            padding-right: 5px;
+            gap: 10px;
         }
 
         .history-item {
             background: rgba(255, 255, 255, 0.015);
             border: 1px solid var(--panel-border);
-            border-radius: 14px;
-            padding: 16px;
+            border-radius: 12px;
+            padding: 14px;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         .history-item:hover {
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.035);
             border-color: var(--accent-primary);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            transform: translateY(-1px);
         }
 
         .history-item.active {
             background: linear-gradient(135deg, rgba(124, 77, 255, 0.12), rgba(0, 255, 204, 0.04));
             border-color: var(--accent-primary);
-            box-shadow: 0 0 15px rgba(124, 77, 255, 0.15);
         }
 
         .history-filename {
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13.5px;
             color: var(--text-primary);
-            margin-bottom: 6px;
+            margin-bottom: 5px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -158,7 +174,7 @@
             background: transparent;
             border: 1px solid var(--panel-border);
             color: var(--text-secondary);
-            padding: 14px;
+            padding: 12px;
             border-radius: 12px;
             font-weight: 600;
             font-size: 13px;
@@ -176,11 +192,11 @@
         /* Main Content Layout */
         main {
             flex-grow: 1;
-            padding: 40px 50px;
+            padding: 40px;
             display: flex;
             flex-direction: column;
-            gap: 30px;
-            max-width: 1300px;
+            gap: 25px;
+            max-width: 1250px;
             margin: 0 auto;
             width: calc(100% - 320px);
         }
@@ -192,7 +208,7 @@
         }
 
         .title-block h1 {
-            font-size: 32px;
+            font-size: 30px;
             font-weight: 800;
             font-family: 'Space Grotesk', sans-serif;
             background: linear-gradient(135deg, #ffffff 40%, #a5a5b5 100%);
@@ -203,7 +219,7 @@
         .title-block p {
             font-size: 14px;
             color: var(--text-secondary);
-            margin-top: 4px;
+            margin-top: 3px;
         }
 
         .status-badge {
@@ -218,7 +234,6 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            box-shadow: 0 0 15px rgba(0, 255, 204, 0.05);
         }
 
         .status-badge::before {
@@ -231,93 +246,164 @@
             box-shadow: 0 0 10px var(--accent-secondary);
         }
 
-        /* Upload Widget */
-        .upload-container {
+        /* Pipeline Dashboard Controls */
+        .dashboard-top-row {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 900px) {
+            .dashboard-top-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .settings-card {
             background: var(--panel-bg);
-            backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--panel-border);
-            border-radius: 24px;
-            padding: 50px 30px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-        }
-
-        .upload-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border: 2px dashed rgba(255, 255, 255, 0.12);
-            border-radius: 24px;
-            pointer-events: none;
-            box-sizing: border-box;
-            transition: all 0.4s ease;
-        }
-
-        .upload-container:hover {
-            background: rgba(255, 255, 255, 0.015);
-            transform: translateY(-2px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .upload-container:hover::before {
-            border-color: var(--accent-primary);
-            box-shadow: inset 0 0 25px rgba(124, 77, 255, 0.1);
-        }
-
-        .upload-container.dragover::before {
-            border-color: var(--accent-secondary);
-            box-shadow: inset 0 0 25px rgba(0, 255, 204, 0.1);
-        }
-
-        .upload-graphic {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, rgba(124, 77, 255, 0.15), rgba(0, 255, 204, 0.15));
             border: 1px solid var(--panel-border);
             border-radius: 20px;
+            padding: 25px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            margin-bottom: 5px;
-            transition: all 0.3s ease;
+            flex-direction: column;
+            gap: 15px;
         }
 
-        .upload-container:hover .upload-graphic {
-            transform: scale(1.05);
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 20px rgba(124, 77, 255, 0.2);
-        }
-
-        .upload-title {
-            font-size: 20px;
+        .settings-title {
+            font-size: 15px;
             font-weight: 700;
-            font-family: 'Space Grotesk', sans-serif;
-        }
-
-        .upload-subtitle {
-            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             color: var(--text-secondary);
-            max-width: 420px;
-            line-height: 1.6;
+            margin-bottom: 5px;
         }
 
-        #file-input {
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .control-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .slider-input {
+            width: 100%;
+            accent-color: var(--accent-primary);
+            height: 5px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 5px;
+            outline: none;
+        }
+
+        /* Ingestion Console Cards */
+        .ingest-box {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 20px;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            border-bottom: 1px solid var(--panel-border);
+            padding-bottom: 10px;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 13.5px;
+            font-weight: 600;
+            padding: 6px 12px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            color: #fff;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tab-content {
             display: none;
         }
 
-        /* Progress Box */
+        .tab-content.active {
+            display: block;
+        }
+
+        /* File drop style */
+        .drop-area {
+            border: 2px dashed rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.01);
+            border-radius: 12px;
+            padding: 30px 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s ease;
+        }
+
+        .drop-area:hover {
+            border-color: var(--accent-primary);
+            background: rgba(255,255,255,0.02);
+        }
+
+        /* Mic recording controls */
+        .record-interface {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            padding: 20px 10px;
+        }
+
+        .record-btn {
+            background: #ff5252;
+            color: #fff;
+            border: none;
+            border-radius: 30px;
+            padding: 12px 24px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(255, 82, 82, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .record-btn.recording {
+            animation: record-pulse-anim 1.5s infinite ease-in-out;
+            background: #d32f2f;
+        }
+
+        @keyframes record-pulse-anim {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.5); }
+            70% { transform: scale(1.03); box-shadow: 0 0 0 10px rgba(255, 82, 82, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 82, 82, 0); }
+        }
+
+        .record-timer-badge {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Dynamic Progress Panel */
         .progress-box {
             display: none;
             width: 100%;
@@ -359,7 +445,7 @@
             100% { background-position: -200% 0; }
         }
 
-        /* Timeline and Interactive Waves */
+        /* Waveform timeline panel */
         .visualiser-panel {
             background: var(--panel-bg);
             border: 1px solid var(--panel-border);
@@ -372,6 +458,12 @@
         }
 
         .player-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .player-left {
             display: flex;
             align-items: center;
             gap: 15px;
@@ -402,6 +494,43 @@
             font-size: 13px;
             font-family: 'Space Grotesk', sans-serif;
             color: var(--text-secondary);
+        }
+
+        /* Speaker renaming panel inside timeline */
+        .rename-console {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            padding: 8px 12px;
+        }
+
+        .rename-console input {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--panel-border);
+            font-size: 12px;
+            color: #fff;
+            padding: 4px;
+            outline: none;
+            width: 90px;
+        }
+
+        .rename-console input:focus {
+            border-color: var(--accent-primary);
+        }
+
+        .rename-submit-btn {
+            background: var(--accent-primary);
+            border: none;
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
         }
 
         .waveform-canvas-container {
@@ -518,7 +647,7 @@
         }
 
         .result-card-header {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             font-family: 'Space Grotesk', sans-serif;
             border-bottom: 1px solid var(--panel-border);
@@ -526,6 +655,23 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+        }
+
+        .export-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--panel-border);
+            color: #fff;
+            padding: 6px 12px;
+            font-weight: 700;
+            font-size: 11px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .export-btn:hover {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
         }
 
         /* Premium Markdown Styles */
@@ -558,7 +704,6 @@
             color: #fff;
         }
 
-        /* Table custom styles */
         .markdown-container table {
             width: 100%;
             border-collapse: collapse;
@@ -591,12 +736,12 @@
             background: rgba(255, 255, 255, 0.015);
         }
 
-        /* Interactive Speaker Transcript List */
+        /* Transcript bubble visual list */
         .transcript-list {
             display: flex;
             flex-direction: column;
             gap: 15px;
-            max-height: 500px;
+            max-height: 550px;
             overflow-y: auto;
             padding-right: 5px;
         }
@@ -692,6 +837,11 @@
         
         <div class="sidebar-divider"></div>
         
+        <!-- Search filter list -->
+        <input type="text" class="search-box" id="search-input" placeholder="🔍 Search logs by filename..." oninput="filterHistory()">
+        
+        <div class="sidebar-divider"></div>
+        
         <div class="sidebar-section-title">Local Records</div>
         
         <div class="history-list" id="history-container">
@@ -706,20 +856,63 @@
         <header>
             <div class="title-block">
                 <h1>Audio Intelligence Dashboard</h1>
-                <p>Interactive on-device speaker separation, transcription, and task extraction</p>
+                <p>Interactive on-device noise gating, speaker separation, and transcript summarisation</p>
             </div>
             <div class="status-badge">Gemma-2B OpenVINO Accelerator</div>
         </header>
 
-        <!-- Drag & Drop Ingestion -->
-        <div class="upload-container" id="drop-zone" onclick="document.getElementById('file-input').click()">
-            <div class="upload-graphic">📥</div>
-            <div class="upload-title">Ingest WAV or MP3 audio file</div>
-            <div class="upload-subtitle">Files are segmented, speaker-separated, and summarised entirely locally within your browser sandbox and CPU environment.</div>
-            <input type="file" id="file-input" accept=".mp3,.wav" onchange="handleFileSelect(event)">
+        <!-- Pipeline control and upload cards -->
+        <div class="dashboard-top-row">
+            
+            <!-- Ingest Box (Upload / Record tabs) -->
+            <div class="ingest-box">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="switchTab('upload-tab')">Upload File</button>
+                    <button class="tab-btn" onclick="switchTab('record-tab')">Record Voice Memo</button>
+                </div>
+                
+                <!-- Upload Tab -->
+                <div class="tab-content active" id="upload-tab">
+                    <div class="drop-area" id="drop-zone" onclick="document.getElementById('file-input').click()">
+                        <div style="font-size: 24px; margin-bottom: 5px;">📥</div>
+                        <div style="font-size: 13.5px; font-weight: 600;">Click to browse or drop WAV/MP3 files</div>
+                        <input type="file" id="file-input" accept=".mp3,.wav" onchange="handleFileSelect(event)">
+                    </div>
+                </div>
+                
+                <!-- Record Tab -->
+                <div class="tab-content" id="record-tab">
+                    <div class="record-interface">
+                        <button class="record-btn" id="record-btn" onclick="toggleRecording()">🎙️ Record Voice Memo</button>
+                        <div class="record-timer-badge" id="record-timer" style="display: none;">0:00</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pipeline config panel -->
+            <div class="settings-card">
+                <div class="settings-title">DSP Configuration Settings</div>
+                
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>Spectral Noise Reduction</span>
+                        <span id="noise-val">0.5</span>
+                    </div>
+                    <input type="range" class="slider-input" id="noise-slider" min="0.0" max="1.0" step="0.1" value="0.5" oninput="document.getElementById('noise-val').innerText=this.value">
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label">
+                        <span>VAD Threshold (dB)</span>
+                        <span id="vad-val">25</span>
+                    </div>
+                    <input type="range" class="slider-input" id="vad-slider" min="15" max="40" step="1" value="25" oninput="document.getElementById('vad-val').innerText=this.value">
+                </div>
+            </div>
+
         </div>
 
-        <!-- Progress box -->
+        <!-- Progress status tracking box -->
         <div class="progress-box" id="progress-box">
             <div class="progress-details">
                 <span id="progress-status-text">Uploading and decoding file...</span>
@@ -730,11 +923,21 @@
             </div>
         </div>
 
-        <!-- Visualiser & Waveform Timeline Panel -->
+        <!-- Waveform player timeline -->
         <div class="visualiser-panel" id="visualiser-panel">
             <div class="player-row">
-                <button class="play-btn" id="play-pause-btn" onclick="togglePlay()">▶</button>
-                <div class="time-display" id="time-display">0:00 / 0:00</div>
+                <div class="player-left">
+                    <button class="play-btn" id="play-pause-btn" onclick="togglePlay()">▶</button>
+                    <div class="time-display" id="time-display">0:00 / 0:00</div>
+                </div>
+                
+                <!-- Rename utility console -->
+                <div class="rename-console">
+                    <input type="text" id="rename-old" placeholder="Old Name (e.g. Speaker A)">
+                    <span style="font-size: 11px;">→</span>
+                    <input type="text" id="rename-new" placeholder="New Name (e.g. Nihar)">
+                    <button class="rename-submit-btn" onclick="renameSpeaker()">Rename</button>
+                </div>
             </div>
             
             <div class="waveform-canvas-container">
@@ -742,10 +945,9 @@
             </div>
 
             <div class="diarisation-timeline">
-                <div class="timeline-label">Speaker Turns & Activity</div>
+                <div class="timeline-label">Speaker Turns (Interactive Gantt)</div>
                 <div class="timeline-track" id="timeline-track">
                     <div class="timeline-progress-line" id="timeline-progress"></div>
-                    <!-- Segments loaded dynamically -->
                 </div>
             </div>
         </div>
@@ -756,7 +958,8 @@
             <!-- Markdown Report Viewer -->
             <div class="result-card">
                 <div class="result-card-header">
-                    <span>Generated Report</span>
+                    <span>Generated Markdown Summary</span>
+                    <button class="export-btn" onclick="exportMarkdown()">Export Report</button>
                 </div>
                 <div class="markdown-container" id="report-view">
                     <p style="color: var(--text-secondary); text-align: center; padding: 40px 0;">
@@ -765,10 +968,11 @@
                 </div>
             </div>
 
-            <!-- Interactive Transcript Bubble List -->
+            <!-- Diarised Timeline list -->
             <div class="result-card">
                 <div class="result-card-header">
-                    <span>Diarised Timeline</span>
+                    <span>Segment Transcript Timeline</span>
+                    <button class="export-btn" onclick="exportJSON()">Export JSON</button>
                 </div>
                 <div class="transcript-list" id="transcript-list-container">
                     <p style="color: var(--text-secondary); text-align: center; padding: 40px 0;">
@@ -780,7 +984,7 @@
         </div>
     </main>
 
-    <!-- Invisible Audio Element for Playback -->
+    <!-- Audio Playback Element -->
     <audio id="audio-player" style="display: none;" ontimeupdate="onAudioTimeUpdate()" onended="onAudioEnded()"></audio>
 
     <script>
@@ -802,8 +1006,76 @@
         let activeSegments = [];
         let audioDuration = 0;
         let isPlaying = false;
+        let activeHistoryId = null;
+        let allHistoryItems = [];
 
-        // Drag and Drop event handlers
+        // Tab selection (Upload / Mic Recording)
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
+        // Microphone audio recording integration
+        let mediaRecorder;
+        let audioChunks = [];
+        let recordingTimer;
+        let recordingSeconds = 0;
+        let isRecording = false;
+
+        function toggleRecording() {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        }
+
+        function startRecording() {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(stream => {
+                audioChunks = [];
+                mediaRecorder = new MediaRecorder(stream);
+                mediaRecorder.ondataavailable = event => {
+                    audioChunks.push(event.data);
+                };
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    const file = new File([audioBlob], `voice_memo_${Date.now()}.wav`, { type: 'audio/wav' });
+                    processFile(file);
+                };
+                mediaRecorder.start();
+                isRecording = true;
+                document.getElementById('record-btn').innerText = '⏹ Stop Recording';
+                document.getElementById('record-btn').classList.add('recording');
+                recordingSeconds = 0;
+                document.getElementById('record-timer').innerText = '0:00';
+                document.getElementById('record-timer').style.display = 'inline';
+                recordingTimer = setInterval(() => {
+                    recordingSeconds++;
+                    const m = Math.floor(recordingSeconds / 60);
+                    const s = recordingSeconds % 60;
+                    document.getElementById('record-timer').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+                }, 1000);
+            })
+            .catch(err => alert("Microphone access denied: " + err));
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                isRecording = false;
+                document.getElementById('record-btn').innerText = '🎙️ Record Voice Memo';
+                document.getElementById('record-btn').classList.remove('recording');
+                clearInterval(recordingTimer);
+                document.getElementById('record-timer').style.display = 'none';
+            }
+        }
+
+        // Drag and Drop handlers
         ['dragenter', 'dragover'].forEach(eventName => {
             dropZone.addEventListener(eventName, (e) => {
                 e.preventDefault();
@@ -833,22 +1105,22 @@
             }
         }
 
-        // Process File: decodes waveform locally and uploads for diarisation
+        // Process file: decodes visual representation and uploads for diarisation
         function processFile(file) {
-            // Draw waveform locally using Web Audio API
             drawLocalWaveform(file);
 
-            // Set source of audio player for playback
             const fileURL = URL.createObjectURL(file);
             audioPlayer.src = fileURL;
 
-            // Show loading indicators
-            dropZone.style.display = 'none';
+            // Ingestion progress indicator
             progressBox.style.display = 'flex';
-            progressStatusText.innerText = "Segmenting audio and transcribing via Gemma-2B...";
+            progressStatusText.innerText = "Applying spectral noise gate and transcribing via Gemma-2B...";
 
             const formData = new FormData();
             formData.append('file', file);
+            // Pass slider values to configure VAD & Noise Reduction
+            formData.append('top_db', document.getElementById('vad-slider').value);
+            formData.append('noise_reduction', document.getElementById('noise-slider').value);
 
             fetch('/upload', {
                 method: 'POST',
@@ -860,10 +1132,9 @@
             })
             .then(data => {
                 progressBox.style.display = 'none';
-                dropZone.style.display = 'flex';
                 visualiserPanel.style.display = 'flex';
+                activeHistoryId = data.id;
                 
-                // Fetch segments to render timeline
                 fetch(`/segments/${data.id}`)
                 .then(r => r.json())
                 .then(segments => {
@@ -872,18 +1143,16 @@
                     renderTranscriptBubbles(segments);
                 });
 
-                // Render markdown summary output
                 reportView.innerHTML = marked.parse(data.summary_markdown);
                 loadHistory();
             })
             .catch(err => {
                 progressBox.style.display = 'none';
-                dropZone.style.display = 'flex';
                 alert("Error processing audio: " + err.message);
             });
         }
 
-        // Draw local waveform from uploaded file array buffer
+        // Draw local waveform using Web Audio API decoding
         function drawLocalWaveform(file) {
             const reader = new FileReader();
             reader.onload = function(e) {
@@ -894,7 +1163,6 @@
                     audioDuration = buffer.duration;
                     formatTime(0, audioDuration);
 
-                    // Resize canvas
                     const width = waveformCanvas.offsetWidth * window.devicePixelRatio;
                     const height = waveformCanvas.offsetHeight * window.devicePixelRatio;
                     waveformCanvas.width = width;
@@ -908,9 +1176,8 @@
                     const amp = height / 2;
 
                     ctx.fillStyle = '#7c4dff';
-                    ctx.globalAlpha = 0.6;
+                    ctx.globalAlpha = 0.65;
 
-                    // Draw positive and negative wave bars
                     for (let i = 0; i < width; i += 3) {
                         let min = 1.0;
                         let max = -1.0;
@@ -926,7 +1193,7 @@
             reader.readAsArrayBuffer(file);
         }
 
-        // Audio Player control
+        // Audio controls
         function togglePlay() {
             if (isPlaying) {
                 audioPlayer.pause();
@@ -944,19 +1211,16 @@
             const duration = audioPlayer.duration || audioDuration;
             formatTime(current, duration);
 
-            // Update timeline progress bar position
             if (duration > 0) {
                 const pct = (current / duration) * 100;
                 timelineProgress.style.left = `${pct}%`;
             }
 
-            // Highlight the active transcript bubble based on current playback time
             activeSegments.forEach((seg, idx) => {
                 const bubble = document.getElementById(`bubble-${idx}`);
                 if (bubble) {
                     if (current >= seg.start_time && current <= seg.end_time) {
                         bubble.classList.add('active');
-                        // Scroll to active bubble within the transcript panel
                         bubble.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                     } else {
                         bubble.classList.remove('active');
@@ -985,9 +1249,69 @@
             timeDisplay.innerText = `${fmt(current)} / ${fmt(duration)}`;
         }
 
+        // Rename speaker dynamically and re-render report & timeline
+        function renameSpeaker() {
+            const oldName = document.getElementById('rename-old').value.trim();
+            const newName = document.getElementById('rename-new').value.trim();
+            if (!activeHistoryId || !oldName || !newName) return;
+            
+            fetch('/rename', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    history_id: activeHistoryId,
+                    old_name: oldName,
+                    new_name: newName
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Update main summary markdown report
+                    reportView.innerHTML = marked.parse(data.summary_markdown);
+                    
+                    // Reload timeline and transcript blocks
+                    fetch(`/segments/${activeHistoryId}`)
+                    .then(r => r.json())
+                    .then(segments => {
+                        activeSegments = segments;
+                        renderDiarisationTimeline(segments);
+                        renderTranscriptBubbles(segments);
+                    });
+                    loadHistory();
+                    
+                    document.getElementById('rename-old').value = '';
+                    document.getElementById('rename-new').value = '';
+                } else {
+                    alert("Error: " + data.error);
+                }
+            });
+        }
+
+        // Export Actions
+        function exportMarkdown() {
+            if (!activeHistoryId) return;
+            const mdText = reportView.innerText;
+            const blob = new Blob([mdText], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `sonicsplice_summary_${activeHistoryId}.md`;
+            a.click();
+        }
+
+        function exportJSON() {
+            if (activeSegments.length === 0) return;
+            const blob = new Blob([JSON.stringify(activeSegments, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `sonicsplice_transcript_${activeHistoryId}.json`;
+            a.click();
+        }
+
         // Timeline Builder
         function renderDiarisationTimeline(segments) {
-            // Remove previous segment divs
             const prevSegs = timelineTrack.querySelectorAll('.timeline-segment');
             prevSegs.forEach(s => s.remove());
 
@@ -1001,14 +1325,17 @@
                 segEl.className = `timeline-segment ${seg.speaker.toLowerCase().replace(' ', '-')}`;
                 segEl.style.left = `${startPct}%`;
                 segEl.style.width = `${widthPct}%`;
-                segEl.innerText = seg.speaker === 'Speaker A' ? 'A' : 'B';
+                
+                // Get short abbreviation
+                const initials = seg.speaker.split(' ').map(n => n[0]).join('');
+                segEl.innerText = initials;
                 segEl.onclick = () => seekTo(seg.start_time);
                 
                 timelineTrack.appendChild(segEl);
             });
         }
 
-        // Transcript Bubbles
+        // Transcript list bubbles builder
         function renderTranscriptBubbles(segments) {
             transcriptContainer.innerHTML = '';
             
@@ -1019,10 +1346,11 @@
                 el.onclick = () => seekTo(seg.start_time);
                 
                 const dotClass = seg.classification.toLowerCase();
+                const speakerClass = seg.speaker.toLowerCase().replace(' ', '-');
                 
                 el.innerHTML = `
                     <div class="transcript-bubble-header">
-                        <span class="speaker-badge ${seg.speaker.toLowerCase().replace(' ', '-')}">${seg.speaker}</span>
+                        <span class="speaker-badge ${speakerClass}">${seg.speaker}</span>
                         <span class="transcript-timestamp">${seg.start_time.toFixed(1)}s - ${seg.end_time.toFixed(1)}s</span>
                     </div>
                     <div class="transcript-bubble-body">${seg.transcript}</div>
@@ -1035,15 +1363,34 @@
             });
         }
 
+        // History list filter
+        function filterHistory() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const items = historyContainer.querySelectorAll('.history-item');
+            
+            items.forEach((el, index) => {
+                const item = allHistoryItems[index];
+                if (item.filename.toLowerCase().includes(query)) {
+                    el.style.display = 'block';
+                } else {
+                    el.style.display = 'none';
+                }
+            });
+        }
+
         // History Management
         function loadHistory() {
             fetch('/history')
             .then(res => res.json())
             .then(data => {
+                allHistoryItems = data;
                 historyContainer.innerHTML = '';
                 data.forEach((item, index) => {
                     const el = document.createElement('div');
                     el.className = 'history-item';
+                    if (activeHistoryId === item.id) {
+                        el.classList.add('active');
+                    }
                     el.onclick = () => showHistoryItem(item, el);
                     el.innerHTML = `
                         <div class="history-filename">${item.filename}</div>
@@ -1061,10 +1408,10 @@
             document.querySelectorAll('.history-item').forEach(i => i.classList.remove('active'));
             if (el) el.classList.add('active');
             
+            activeHistoryId = item.id;
             reportView.innerHTML = marked.parse(item.summary_markdown);
-            visualiserPanel.style.display = 'none'; // hide player for historical logs without source audio loaded
+            visualiserPanel.style.display = 'none'; // hide player for logs without active binary file
 
-            // Fetch segments for this history item
             fetch(`/segments/${item.id}`)
             .then(r => r.json())
             .then(segments => {
@@ -1080,12 +1427,13 @@
                     reportView.innerHTML = `<p style="color: var(--text-secondary); text-align: center; padding: 40px 0;">Upload a voice memo to begin.</p>`;
                     transcriptContainer.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 40px 0;">No transcript active.</p>';
                     visualiserPanel.style.display = 'none';
+                    activeHistoryId = null;
+                    activeSegments = [];
                     loadHistory();
                 });
             }
         }
 
-        // Initialize history list on page load
         loadHistory();
     </script>
 </body>

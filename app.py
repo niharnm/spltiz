@@ -28,9 +28,13 @@ def upload():
     filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
     file.save(filepath)
     
+    # Get dynamic configuration from frontend sliders
+    top_db = int(request.form.get('top_db', 25))
+    noise_reduction = float(request.form.get('noise_reduction', 0.5))
+    
     try:
-        # Run local VAD + diarization + inference
-        segments = pipeline.segment_audio(filepath)
+        # Run local noise-cleaned VAD + diarization + inference
+        segments = pipeline.segment_audio(filepath, top_db=top_db, noise_reduction_level=noise_reduction)
         for seg in segments:
             pipeline.run_inference(seg)
             
@@ -43,6 +47,33 @@ def upload():
             "id": history_id,
             "filename": file.filename,
             "summary_markdown": summary_md
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/rename', methods=['POST'])
+def rename():
+    data = request.get_json()
+    history_id = data.get('history_id')
+    old_name = data.get('old_name')
+    new_name = data.get('new_name')
+    
+    if not history_id or not old_name or not new_name:
+        return jsonify({"error": "Missing parameters"}), 400
+        
+    try:
+        pipeline.rename_speaker(int(history_id), old_name, new_name)
+        
+        # Fetch the updated summary markdown
+        conn = sqlite3.connect(pipeline.db_path)
+        cursor = conn.cursor()
+        cursor.execute("SELECT summary_markdown FROM history WHERE id = ?", (history_id,))
+        row = cursor.fetchone()
+        conn.close()
+        
+        return jsonify({
+            "status": "success",
+            "summary_markdown": row[0] if row else ""
         })
     except Exception as e:
         return jsonify({"error": str(e)}), 500
