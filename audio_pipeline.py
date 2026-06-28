@@ -178,6 +178,7 @@ class AudioPipeline:
                 prompt = (
                     "<audio> Please transcribe this audio segment verbatim. Afterwards, classify the spoken context "
                     "as either a 'task' (if it mentions an action to be done), an 'idea' (if it mentions suggestions, thoughts or opinions), "
+                    "a 'decision' (if it is a consensus or agreement reached), a 'question' (if it is an inquiry or unresolved query), "
                     "or 'irrelevant' (if it is noise, filler words, or small talk)."
                 )
                 
@@ -203,6 +204,10 @@ class AudioPipeline:
                 lower_text = output_text.lower()
                 if "task" in lower_text:
                     classification = "task"
+                elif "decision" in lower_text:
+                    classification = "decision"
+                elif "question" in lower_text:
+                    classification = "question"
                 elif "idea" in lower_text:
                     classification = "idea"
                 
@@ -243,10 +248,15 @@ class AudioPipeline:
         lower_t = transcript.lower()
         if any(w in lower_t for w in ["need to", "make sure", "remember to", "will write"]):
             classification = "task"
-        elif any(w in lower_t for w in ["think", "agree", "idea"]):
+        elif any(w in lower_t for w in ["agree", "decided", "merge"]):
+            classification = "decision"
+        elif any(w in lower_t for w in ["how", "why", "what", "should", "?"]):
+            classification = "question"
+        elif any(w in lower_t for w in ["think", "idea", "perhaps"]):
             classification = "idea"
         else:
             classification = "irrelevant"
+
 
         segment.transcript = transcript
         segment.classification = classification

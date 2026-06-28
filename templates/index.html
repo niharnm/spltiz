@@ -985,6 +985,8 @@
 
         .classification-dot.task { background-color: #ff5252; }
         .classification-dot.idea { background-color: #00e676; }
+        .classification-dot.decision { background-color: #00b4d8; }
+        .classification-dot.question { background-color: #ff9100; }
         .classification-dot.irrelevant { background-color: #9e9e9e; }
 
         .edit-bubble-btn {
@@ -1218,9 +1220,10 @@
                 <div class="result-card-header">
                     <span>Meeting Intelligence Report</span>
                     <div class="preset-container">
-                        <button class="preset-pill active" id="preset-exec" onclick="setPreset('executive')">Executive</button>
-                        <button class="preset-pill" id="preset-brain" onclick="setPreset('brainstorm')">Brainstorm</button>
-                        <button class="preset-pill" id="preset-verb" onclick="setPreset('verbatim')">Verbatim</button>
+                        <button class="preset-pill active" id="preset-exec" onclick="setPreset('executive')">Executive Summary</button>
+                        <button class="preset-pill" id="preset-action" onclick="setPreset('action_items')">Action Items</button>
+                        <button class="preset-pill" id="preset-brain" onclick="setPreset('brainstorm')">Brainstorm Notes</button>
+                        <button class="preset-pill" id="preset-verb" onclick="setPreset('verbatim')">Verbatim Transcript</button>
                     </div>
                     <button class="export-btn" id="export-md-btn" onclick="exportMarkdown()">Export Report</button>
                 </div>
@@ -1285,6 +1288,7 @@
             activePreset = presetName;
             document.querySelectorAll('.preset-pill').forEach(btn => btn.classList.remove('active'));
             if (presetName === 'executive') document.getElementById('preset-exec').classList.add('active');
+            if (presetName === 'action_items') document.getElementById('preset-action').classList.add('active');
             if (presetName === 'brainstorm') document.getElementById('preset-brain').classList.add('active');
             if (presetName === 'verbatim') document.getElementById('preset-verb').classList.add('active');
             
