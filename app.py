@@ -61,7 +61,7 @@ def rename():
     new_name = data.get('new_name')
     preset = data.get('preset', 'executive')
     
-    if not history_id or not old_name or not new_name:
+    if history_id is None:
         return jsonify({"error": "Missing parameters"}), 400
         
     try:
