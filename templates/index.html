@@ -35,8 +35,8 @@
     </script>
     <style>
         :root {
-            --bg-color: #050508;
-            --panel-bg: rgba(15, 15, 20, 0.8);
+            --bg-color: #0b0b0e;
+            --panel-bg: #14141b;
             --panel-border: rgba(255, 255, 255, 0.08);
             --accent-primary: #7c4dff;
             --accent-primary-glow: rgba(124, 77, 255, 0.35);
@@ -65,17 +65,16 @@
             display: flex;
             overflow-x: hidden;
             background-image: 
-                radial-gradient(circle at 3% 10%, rgba(124, 77, 255, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 97% 85%, rgba(0, 255, 204, 0.1) 0%, transparent 45%);
+                radial-gradient(circle at 3% 10%, rgba(124, 77, 255, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 97% 85%, rgba(0, 255, 204, 0.06) 0%, transparent 45%);
         }
 
         /* Sidebar Navigation */
         aside {
             width: 320px;
-            background: var(--panel-bg);
-            backdrop-filter: var(--glass-blur);
+            background: #101015;
             border-right: 1px solid var(--panel-border);
-            padding: 35px 20px;
+            padding: 30px 20px;
             display: flex;
             flex-direction: column;
             gap: 20px;
@@ -90,21 +89,22 @@
             align-items: center;
             gap: 12px;
             padding-left: 5px;
+            margin-bottom: 10px;
         }
 
         .logo-icon {
-            width: 38px;
-            height: 38px;
+            width: 36px;
+            height: 36px;
             background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            border-radius: 12px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 800;
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 20px;
+            font-size: 18px;
             color: #000;
-            box-shadow: 0 0 25px var(--accent-primary-glow);
+            box-shadow: 0 0 20px var(--accent-primary-glow);
         }
 
         .logo-text {
@@ -112,13 +112,45 @@
             font-size: 22px;
             font-weight: 700;
             letter-spacing: -0.5px;
-            background: linear-gradient(to right, #ffffff, #a5a5b5);
+            background: linear-gradient(to right, #ffffff, #b5b5c9);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .search-box {
+        /* Sidebar icons navigation list */
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            border-radius: 10px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            color: #fff;
             background: rgba(255, 255, 255, 0.03);
+        }
+
+        .nav-item.active {
+            color: #fff;
+            background: rgba(124, 77, 255, 0.1);
+            border-left: 3px solid var(--accent-primary);
+        }
+
+        .search-box {
+            background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--panel-border);
             border-radius: 12px;
             padding: 10px 14px;
@@ -131,7 +163,7 @@
 
         .search-box:focus {
             border-color: var(--accent-primary);
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.04);
         }
 
         .sidebar-divider {
@@ -179,7 +211,7 @@
 
         .history-filename {
             font-weight: 600;
-            font-size: 13.5px;
+            font-size: 13px;
             color: var(--text-primary);
             margin-bottom: 5px;
             white-space: nowrap;
@@ -195,14 +227,67 @@
             color: var(--text-secondary);
         }
 
+        /* Sidebar profile footer */
+        .sidebar-footer {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--panel-border);
+        }
+
+        .profile-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 5px;
+        }
+
+        .profile-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #2d2d38;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .profile-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .profile-email {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .theme-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
         .clear-btn {
             background: transparent;
             border: 1px solid var(--panel-border);
             color: var(--text-secondary);
-            padding: 12px;
-            border-radius: 12px;
+            padding: 10px;
+            border-radius: 10px;
             font-weight: 600;
-            font-size: 13px;
+            font-size: 12px;
             cursor: pointer;
             transition: all 0.2s ease;
             text-align: center;
@@ -245,6 +330,24 @@
             font-size: 14px;
             color: var(--text-secondary);
             margin-top: 3px;
+        }
+
+        /* Header profile button */
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1.5px solid var(--panel-border);
+            background-color: var(--accent-primary);
+            background-image: radial-gradient(circle at 30% 30%, #a27eff 0%, #7c4dff 100%);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(124, 77, 255, 0.25);
         }
 
         .status-badge {
@@ -374,7 +477,7 @@
             border: 2px dashed rgba(255,255,255,0.1);
             background: rgba(255,255,255,0.01);
             border-radius: 12px;
-            padding: 30px 15px;
+            padding: 35px 15px;
             text-align: center;
             cursor: pointer;
             transition: border-color 0.2s ease;
@@ -383,6 +486,13 @@
         .drop-area:hover {
             border-color: var(--accent-primary);
             background: rgba(255,255,255,0.02);
+        }
+
+        .upload-title-h3 {
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Space Grotesk', sans-serif;
+            margin-bottom: 5px;
         }
 
         /* Mic recording controls */
@@ -463,6 +573,11 @@
             border-radius: 4px;
             animation: progress-pulse 2s infinite linear;
             background-size: 200% 100%;
+        }
+
+        @keyframes progress-pulse {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
         }
 
         /* Waveform timeline panel */
@@ -940,10 +1055,30 @@
             <div class="logo-text">Spltiz</div>
         </div>
         
+        <!-- Sidebar Navigation List -->
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" id="nav-dash">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                Dashboard
+            </a>
+            <a href="#" class="nav-item" id="nav-projs">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                Projects
+            </a>
+            <a href="#" class="nav-item" id="nav-history">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                History
+            </a>
+            <a href="#" class="nav-item" id="nav-settings">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                Settings
+            </a>
+        </nav>
+
         <div class="sidebar-divider"></div>
         
         <!-- Search filter list -->
-        <input type="text" class="search-box" id="search-input" placeholder="🔍 Search logs by filename..." oninput="filterHistory()">
+        <input type="text" class="search-box" id="search-input" placeholder="🔍 Search logs..." oninput="filterHistory()">
         
         <div class="sidebar-divider"></div>
         
@@ -954,6 +1089,20 @@
         </div>
 
         <button class="clear-btn" onclick="clearHistory()">Clear History</button>
+
+        <div class="sidebar-footer">
+            <div class="profile-row">
+                <div class="profile-avatar">N</div>
+                <div class="profile-info">
+                    <span class="profile-name">Nihar Manchikalapudi</span>
+                    <span class="profile-email">nihar.manchikalapudi@gmail.com</span>
+                </div>
+            </div>
+            <div class="theme-row">
+                <span>Dark Theme</span>
+                <span style="color: var(--accent-secondary);">Active</span>
+            </div>
+        </div>
     </aside>
 
     <!-- Main Workspace -->
@@ -963,7 +1112,10 @@
                 <h1>Audio Intelligence Dashboard</h1>
                 <p>Interactive on-device noise gating, speaker separation, and transcript summarisation</p>
             </div>
-            <div class="status-badge">Gemma-2B OpenVINO Accelerator</div>
+            <div class="header-controls">
+                <div class="status-badge">Gemma-2B OpenVINO Active</div>
+                <div class="header-avatar"></div>
+            </div>
         </header>
 
         <!-- Pipeline control and upload cards -->
@@ -979,8 +1131,9 @@
                 <!-- Upload Tab -->
                 <div class="tab-content active" id="upload-tab">
                     <div class="drop-area" id="drop-zone" onclick="document.getElementById('file-input').click()">
-                        <div style="font-size: 24px; margin-bottom: 5px;">📥</div>
-                        <div style="font-size: 13.5px; font-weight: 600;">Click to browse or drop WAV/MP3 files</div>
+                        <div style="font-size: 32px; margin-bottom: 8px; color: var(--accent-primary);">📤</div>
+                        <h3 class="upload-title-h3">Upload Your Spltiz File</h3>
+                        <div style="font-size: 13px; color: var(--text-secondary);">Drag and drop for new recordings (WAV/MP3)</div>
                         <input type="file" id="file-input" accept=".mp3,.wav" onchange="handleFileSelect(event)">
                     </div>
                 </div>
@@ -996,22 +1149,22 @@
 
             <!-- Pipeline config panel -->
             <div class="settings-card">
-                <div class="settings-title">DSP Configuration Settings</div>
+                <div class="settings-title">DSP & Pipeline Settings</div>
                 
                 <div class="control-group">
                     <div class="control-label">
                         <span>Spectral Noise Reduction</span>
-                        <span id="noise-val">0.5</span>
+                        <span id="noise-val">50%</span>
                     </div>
-                    <input type="range" class="slider-input" id="noise-slider" min="0.0" max="1.0" step="0.1" value="0.5" oninput="document.getElementById('noise-val').innerText=this.value">
+                    <input type="range" class="slider-input" id="noise-slider" min="0.0" max="1.0" step="0.1" value="0.5" oninput="document.getElementById('noise-val').innerText=(Math.round(this.value * 100)) + '%'">
                 </div>
 
                 <div class="control-group">
                     <div class="control-label">
-                        <span>VAD Threshold (dB)</span>
-                        <span id="vad-val">25</span>
+                        <span>VAD Sensitivity (Voice Activity Detection)</span>
+                        <span id="vad-val">7</span>
                     </div>
-                    <input type="range" class="slider-input" id="vad-slider" min="15" max="40" step="1" value="25" oninput="document.getElementById('vad-val').innerText=this.value">
+                    <input type="range" class="slider-input" id="vad-slider" min="1" max="10" step="1" value="7" oninput="document.getElementById('vad-val').innerText=this.value">
                 </div>
             </div>
 
@@ -1063,7 +1216,7 @@
             <!-- Markdown Report Viewer -->
             <div class="result-card">
                 <div class="result-card-header">
-                    <span>Generated Intelligence Summary</span>
+                    <span>Meeting Intelligence Report</span>
                     <div class="preset-container">
                         <button class="preset-pill active" id="preset-exec" onclick="setPreset('executive')">Executive</button>
                         <button class="preset-pill" id="preset-brain" onclick="setPreset('brainstorm')">Brainstorm</button>
@@ -1072,7 +1225,7 @@
                     <button class="export-btn" id="export-md-btn" onclick="exportMarkdown()">Export Report</button>
                 </div>
                 <!-- Dynamic Dialogue visual metrics inside card -->
-                <div id="analytics-metrics-box" style="display: none;">
+                <div id="analytics-metrics-box" style="display: none; padding: 0 10px;">
                     <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 5px;">Dialogue Share Ratio</div>
                     <div class="analytics-visual-bar" id="dialogue-visual-bar"></div>
                 </div>
@@ -1086,7 +1239,7 @@
             <!-- Diarised Timeline list -->
             <div class="result-card">
                 <div class="result-card-header">
-                    <span>Segment Transcript Timeline</span>
+                    <span>Transcript Editor</span>
                     <button class="export-btn" id="export-json-btn" onclick="exportJSON()">Export JSON</button>
                 </div>
                 <div class="transcript-list" id="transcript-list-container">
@@ -1264,7 +1417,12 @@
 
             const formData = new FormData();
             formData.append('file', file);
-            formData.append('top_db', document.getElementById('vad-slider').value);
+            
+            // Map slider values (note: VAD sensitivity range is 1-10 in display, we convert to top_db: 40 - (sensitivity * 2))
+            const sens = parseInt(document.getElementById('vad-slider').value);
+            const topDb = 42 - (sens * 2);
+            
+            formData.append('top_db', topDb);
             formData.append('noise_reduction', document.getElementById('noise-slider').value);
             formData.append('preset', activePreset);
 
@@ -1368,7 +1526,6 @@
                 if (bubble) {
                     if (current >= seg.start_time && current <= seg.end_time) {
                         bubble.classList.add('active');
-                        // Prevent scroll lock during active editing input
                         if (!document.getElementById(`edit-area-${idx}`)) {
                             bubble.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                         }
@@ -1446,7 +1603,7 @@
             bubbleBody.innerHTML = `
                 <textarea id="edit-area-${idx}" class="edit-textarea" rows="3">${originalText}</textarea>
                 <div class="edit-controls">
-                    <button class="edit-save-btn" onclick="saveSegmentText(${idx}, ${startTime})">Save Correction</button>
+                    <button class="edit-save-btn" onclick="saveSegmentText(${idx}, ${startTime})">Save Changes</button>
                     <button class="edit-cancel-btn" onclick="cancelSegmentEdit(${idx}, \`${originalText.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)">Cancel</button>
                 </div>
             `;
