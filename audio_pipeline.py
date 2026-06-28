@@ -70,10 +70,19 @@ class AudioPipeline:
         
         try:
             print(f"[Pipeline] Loading {self.model_id} via OpenVINO optimization...")
+            # Load processor
+            self.processor = AutoProcessor.from_pretrained(self.model_id)
+            # Load model optimized for OpenVINO execution (device="CPU" or "GPU")
+            self.model = OVModelForCausalLM.from_pretrained(
+                self.model_id, 
+                export=True, 
+                device="CPU"
+            )
             return True
         except Exception as e:
             print(f"[Pipeline] Failed to load model: {e}. Falling back to local offline pipeline.")
             return False
+
 
     def segment_audio(self, audio_path: str, top_db: int = 25, noise_reduction_level: float = 0.5) -> list[AudioSegment]:
         """
@@ -165,10 +174,44 @@ class AudioPipeline:
         """
         if self.model and self.processor:
             try:
-                # Real ML pipeline code execution block
-                pass
-            except Exception:
-                pass
+                # 1. Construct dynamic multimodal speech-to-text + classification prompt
+                prompt = (
+                    "<audio> Please transcribe this audio segment verbatim. Afterwards, classify the spoken context "
+                    "as either a 'task' (if it mentions an action to be done), an 'idea' (if it mentions suggestions, thoughts or opinions), "
+                    "or 'irrelevant' (if it is noise, filler words, or small talk)."
+                )
+                
+                # 2. Process audio input using processor
+                inputs = self.processor(
+                    text=prompt,
+                    audios=segment.audio_data,
+                    sampling_rate=segment.sample_rate,
+                    return_tensors="pt"
+                )
+                
+                # 3. Generate token output from model using torch.inference_mode
+                with torch.no_grad():
+                    outputs = self.model.generate(**inputs, max_new_tokens=256)
+                    
+                # 4. Decode outputs and parse transcript & intent classification
+                output_text = self.processor.decode(outputs[0], skip_special_tokens=True)
+                
+                transcript_part = output_text
+                classification = "irrelevant"
+                
+                # Parse intent classification
+                lower_text = output_text.lower()
+                if "task" in lower_text:
+                    classification = "task"
+                elif "idea" in lower_text:
+                    classification = "idea"
+                
+                segment.transcript = transcript_part
+                segment.classification = classification
+                return transcript_part, classification
+            except Exception as e:
+                print(f"[Pipeline] Gemma inference error: {e}. Using high-fidelity fallback.")
+
 
         # High-Fidelity local simulation matching the tone of voice memos
         duration = segment.end_time - segment.start_time
