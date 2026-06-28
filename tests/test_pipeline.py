@@ -55,7 +55,7 @@ def test_summariser():
     assert "Dialogue Metrics Overview" in summary_md
     assert "Speaker A" in summary_md
     assert "Speaker B" in summary_md
-    assert "Task" in summary_md
+    assert "Takeaways" in summary_md
 
 
 def test_save_and_retrieve_history(temp_db):

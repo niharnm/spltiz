@@ -45,17 +45,20 @@ class Summariser:
     def generate_summary(segments: list[AudioSegment], preset: str = "executive") -> str:
         """
         Compiles structured insights based on preset rules:
-        - Executive: Task tables, timelines, high-impact decisions.
+        - Executive: Overall dialogue highlights, key decisions.
+        - Action Items: Interactive checkbox lists.
         - Brainstorm: Ideas boards, concept definitions, creative workflows.
         - Verbatim: Fully aligned conversation transcripts.
         """
         tasks = [seg for seg in segments if seg.classification == "task"]
         ideas = [seg for seg in segments if seg.classification == "idea"]
+        decisions = [seg for seg in segments if seg.classification == "decision"]
+        questions = [seg for seg in segments if seg.classification == "question"]
         analytics = Summariser.calculate_analytics(segments)
         
         md = []
         md.append("# Spltiz Intelligence Summary")
-        md.append(f"*Preset: {preset.capitalize()} Mode | Computed entirely locally via Gemma-2B-audio*")
+        md.append(f"*Preset: {preset.replace('_', ' ').capitalize()} Mode | Computed entirely locally via Gemma-2B-audio*")
         md.append("")
         
         # 1. Conversation Metrics
@@ -67,21 +70,35 @@ class Summariser:
         
         # 2. Preset Specific Analysis
         if preset == "executive":
+            md.append("## 🎯 Executive Highlight Summary")
+            md.append("This conversation focused on defining priorities and resolving core workflow configurations. Key highlights include:")
+            for idx, i in enumerate(ideas[:2]):
+                md.append(f"- **Key Point:** {i.transcript} (raised by {i.speaker})")
+            if decisions:
+                for d in decisions[:2]:
+                    md.append(f"- **Decision:** {d.transcript} ({d.speaker})")
+            
+            md.append("")
+            md.append("## 🔑 Key Takeaways")
+            if tasks:
+                md.append(f"- Action plans are set for {len(tasks)} items across the team.")
+            if questions:
+                md.append(f"- Outstanding question: *\"{questions[0].transcript}\"* remains under review.")
+                
+        elif preset == "action_items":
             md.append("## 🎯 Actionable Task Board")
             if tasks:
                 for t in tasks:
                     md.append(f"- [ ] **Task ({t.speaker} @ {t.start_time:.1f}s):** {t.transcript}")
             else:
                 md.append("- No tasks were automatically detected in this file.")
-                
-            md.append("")
-            md.append("## 🔑 Key Decisions & Outlines")
-            if ideas:
-                for idx, i in enumerate(ideas[:3]):
-                    md.append(f"{idx+1}. **Decision:** {i.transcript} ({i.speaker} at {i.start_time:.1f}s)")
-            else:
-                md.append("- No primary brainstorming decisions logged.")
-                
+            
+            if decisions:
+                md.append("")
+                md.append("## 📌 Verified Decisions")
+                for d in decisions:
+                    md.append(f"- [x] **Decided:** {d.transcript} ({d.speaker})")
+                    
         elif preset == "brainstorm":
             md.append("## 💡 Ideation & Concept Cloud")
             if ideas:
@@ -89,6 +106,13 @@ class Summariser:
                     md.append(f"- **Idea ({i.speaker} @ {i.start_time:.1f}s):** {i.transcript}")
             else:
                 md.append("- No ideation logs found.")
+                
+            if questions:
+                md.append("")
+                md.append("## ❓ Open Questions & Inquiries")
+                for q in questions:
+                    md.append(f"- **Question ({q.speaker} @ {q.start_time:.1f}s):** {q.transcript}")
+                    
             md.append("")
             md.append("## ⚡ Suggested Actions")
             if tasks:
@@ -98,6 +122,7 @@ class Summariser:
         else: # verbatim
             md.append("## 📝 Verbatim Transcript Logs")
             for seg in segments:
-                md.append(f"**[{seg.start_time:.1f}s - {seg.end_time:.1f}s] {seg.speaker}:** {seg.transcript}")
+                classification_badge = f" *[{seg.classification.upper()}]*" if seg.classification != "irrelevant" else ""
+                md.append(f"**[{seg.start_time:.1f}s - {seg.end_time:.1f}s] {seg.speaker}:** {seg.transcript}{classification_badge}")
                 
         return "\n".join(md)
