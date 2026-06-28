@@ -47,7 +47,17 @@ Spltiz is a local-first desktop application designed to process noisy voice memo
 
 ## Preview
 
-![Spltiz Dashboard Mockup](app_screenshot.png)
+### 🖥️ Dashboard Overview
+![Spltiz Dashboard Overview](assets/dashboard_overview.png)
+
+### 📊 Speaker Diarisation & Waveform Timeline
+![Spltiz Audio Diarisation](assets/audio_diarization.png)
+
+### ✏️ Interactive Transcript Editor (Inline Corrections)
+![Spltiz Transcription Editor](assets/transcription_editor.png)
+
+### 🎛️ DSP & Dynamic Pipeline Settings
+![Spltiz DSP Settings](assets/settings_dsp.png)
 
 ## One-Command Run
 
