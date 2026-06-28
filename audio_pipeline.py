@@ -26,7 +26,7 @@ class AudioSegment:
         self.classification = "irrelevant"  # idea, task, irrelevant
 
 class AudioPipeline:
-    def __init__(self, db_path="sonicsplice.db", model_id="google/gemma-3-4b-it"):
+    def __init__(self, db_path="spltiz.db", model_id="google/gemma-3-4b-it"):
         self.db_path = db_path
         self.model_id = model_id
         self.model = None

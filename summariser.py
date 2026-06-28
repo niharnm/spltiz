@@ -54,7 +54,7 @@ class Summariser:
         analytics = Summariser.calculate_analytics(segments)
         
         md = []
-        md.append("# SonicSplice Intelligence Summary")
+        md.append("# Spltiz Intelligence Summary")
         md.append(f"*Preset: {preset.capitalize()} Mode | Computed entirely locally via Gemma-2B-audio*")
         md.append("")
         

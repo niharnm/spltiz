@@ -113,7 +113,7 @@ class DropArea(QFrame):
                 self.fileDropped.emit(filepath)
 
 
-class SonicSpliceApp(QMainWindow):
+class SpltizApp(QMainWindow):
     def __init__(self):
         super().__init__()
         self.pipeline = AudioPipeline()
@@ -121,7 +121,7 @@ class SonicSpliceApp(QMainWindow):
         self.load_history()
 
     def init_ui(self):
-        self.setWindowTitle("SonicSplice - Local-First Intelligent Audio Splicer")
+        self.setWindowTitle("Spltiz - Local-First Intelligent Audio Splicer")
         self.resize(1100, 700)
         self.setMinimumSize(850, 600)
         
@@ -229,7 +229,7 @@ class SonicSpliceApp(QMainWindow):
         
         # Header / Title block
         header = QHBoxLayout()
-        title_lbl = QLabel("SonicSplice")
+        title_lbl = QLabel("Spltiz")
         title_lbl.setObjectName("Title")
         header.addWidget(title_lbl)
         
@@ -327,6 +327,6 @@ class SonicSpliceApp(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = SonicSpliceApp()
+    window = SpltizApp()
     window.show()
     sys.exit(app.exec())

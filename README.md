@@ -1,12 +1,12 @@
-# SonicSplice 🎙️
+# Spltiz 🎙️
 
-SonicSplice is a local-first desktop application designed to process noisy voice memos on-device, generating high-fidelity, speaker-diarised, and timestamped transcripts alongside three actionable summary points.
+Spltiz is a local-first desktop application designed to process noisy voice memos on-device, generating high-fidelity, speaker-diarised, and timestamped transcripts alongside three actionable summary points.
 
 ## System Architecture
 
 ```
                        +---------------------------------------+
-                       |              SonicSplice              |
+                       |                Spltiz                 |
                        |       (PySide6 Desktop Client)        |
                        +-------------------+-------------------+
                                            |
@@ -41,20 +41,20 @@ SonicSplice is a local-first desktop application designed to process noisy voice
                                            v
                        +-------------------+-------------------+
                        |          SQLite Local History         |
-                       |           (sonicsplice.db)            |
+                       |              (spltiz.db)              |
                        +---------------------------------------+
 ```
 
 ## Preview
 
-![SonicSplice Dashboard Mockup](app_screenshot.png)
+![Spltiz Dashboard Mockup](app_screenshot.png)
 
 ## One-Command Run
 
 Build and launch the lightweight headless test suit inside Docker in a single step:
 
 ```bash
-docker build -t sonicsplice .
+docker build -t spltiz .
 ```
 
 To run the PySide6 app locally (requires X11 environment or native host):

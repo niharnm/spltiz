@@ -51,7 +51,7 @@ def test_summariser():
     seg2.classification = "idea"
     
     summary_md = Summariser.generate_summary([seg1, seg2])
-    assert "# SonicSplice Intelligence Summary" in summary_md
+    assert "# Spltiz Intelligence Summary" in summary_md
     assert "Dialogue Metrics Overview" in summary_md
     assert "Speaker A" in summary_md
     assert "Speaker B" in summary_md
